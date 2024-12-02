@@ -1,0 +1,86 @@
+{% extends 'base.html' %} {% block title %} Sign Up {% endblock %} {% block
+content %}
+<div
+  class="bg-gray-900 text-gray-100 min-h-screen flex items-center justify-center"
+>
+  <div class="card bg-gray-800 shadow-lg rounded-lg w-full max-w-sm p-6">
+    <h2 class="text-center text-xl font-bold text-blue-400 mb-4">Sign Up</h2>
+    <form
+      id="signup-form"
+      method="POST"
+      onsubmit="event.preventDefault(); signup();"
+    >
+      <div class="mb-4">
+        <label for="name" class="block text-gray-400 mb-2">Full Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="w-full p-2 rounded-md bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter your full name"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label for="email" class="block text-gray-400 mb-2">Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          class="w-full p-2 rounded-md bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label for="password" class="block text-gray-400 mb-2">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="w-full p-2 rounded-md bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+      <div class="mb-4">
+        <label for="confirm_password" class="block text-gray-400 mb-2"
+          >Confirm Password</label
+        >
+        <input
+          type="password"
+          id="confirm_password"
+          name="confirm_password"
+          class="w-full p-2 rounded-md bg-gray-700 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Re-enter your password"
+          required
+        />
+      </div>
+      <button
+        onclick="signup()"
+        type="submit"
+        class="w-full bg-blue-500 py-2 rounded-md text-gray-100 font-bold hover:bg-blue-600"
+      >
+        Sign Up
+      </button>
+    </form>
+    <div class="text-center mt-4">
+      <p class="text-gray-400">
+        Already have an account?
+        <a onclick="login(event)" class="text-blue-400 hover:underline"
+          >Login</a
+        >
+      </p>
+    </div>
+    <!-- Google Signup Button -->
+    <div class="text-center mt-4">
+      <button
+        onclick="loginWithGoogle(event)"
+        class="w-full bg-red-500 py-2 rounded-md text-white font-bold hover:bg-red-600"
+      >
+        Login with Google
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}

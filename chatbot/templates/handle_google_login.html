@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Login Success</title>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const recentId = "{{ recent_id }}";
+        if (recentId) {
+          localStorage.setItem("recent_id", recentId);
+          window.location.href = "/chat"; // Redirect to the chat page
+        } else {
+          console.error("No recent_id found");
+          window.location.href = "/login"; // Redirect to the login page if there's an error
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Handling Google Login...</h1>
+  </body>
+</html>

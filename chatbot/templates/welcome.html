@@ -1,0 +1,47 @@
+{% extends 'base.html' %} {% block title %} Welcome {% endblock %} {% block
+content %}
+<div class="flex flex-col items-center justify-center h-full">
+  <!-- Logo Section -->
+  <div class="mb-6">
+    <img
+      src="{{ url_for('static', filename='images/logo.png') }}"
+      alt="Chatbot App Logo"
+      class="w-48 h-48 rounded-full"
+    />
+  </div>
+
+  <!-- Welcome Message -->
+  <div class="text-center mb-8">
+    <h1 class="text-4xl font-bold text-white">Welcome to Chatbot App!</h1>
+    <p class="text-lg text-gray-400 mt-2">
+      Your personal assistant for all your questions and ideas.
+    </p>
+  </div>
+
+  <!-- Buttons -->
+  <div class="space-x-4">
+    <a
+      href="{{ url_for('auth.login') }}"
+      class="px-6 py-3 text-lg font-medium text-white bg-blue-500 rounded hover:bg-blue-600 transition"
+    >
+      Login
+    </a>
+    <a
+      href="{{ url_for('auth.signup') }}"
+      class="px-6 py-3 text-lg font-medium text-white bg-green-500 rounded hover:bg-green-600 transition"
+    >
+      Sign Up
+    </a>
+  </div>
+
+  <!-- Additional Feature Section -->
+  <div class="mt-10">
+    <h2 class="text-2xl font-semibold text-white">Why Choose Us?</h2>
+    <ul class="text-gray-400 mt-4 list-disc list-inside">
+      <li>24/7 Availability</li>
+      <li>Creative and Accurate Responses</li>
+      <li>Tailored Solutions for Your Needs</li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

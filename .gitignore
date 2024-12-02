@@ -1,0 +1,6 @@
+.env
+new.py
+instance/
+migrations/
+chatbot/__pycache__
+__pycache__

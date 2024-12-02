@@ -1,0 +1,95 @@
+{% extends 'base.html' %} {% block title %} Chatbot Form {% endblock %} {% block
+navbar_logout %}
+<!-- Add the logout button here -->
+<a class="text-gray-300 hover:text-white" href="{{ url_for('auth.logout') }}"
+  >Logout</a
+>
+{% endblock %} {% block content %}
+<div class="flex h-screen">
+  <!-- Sidebar (Left) -->
+  <div class="w-1/4 bg-gray-800 text-gray-100 p-4 space-y-4 h-full">
+    <!-- Logo -->
+    <div class="text-center mb-6">
+      <h1 class="text-xl font-semibold text-blue-500">Chatbot</h1>
+    </div>
+
+    <!-- Search Bar -->
+    <div>
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search for Chat..."
+        class="w-full p-2 rounded-md bg-gray-700 text-gray-200 placeholder-gray-400 focus:outline-none"
+      />
+    </div>
+
+    <!-- New Chat Button -->
+    <div>
+      <button
+        class="w-full bg-blue-500 py-2 rounded-md text-gray-100 font-bold hover:bg-blue-600"
+        onclick="createNewChat()"
+      >
+        + New Chat
+      </button>
+    </div>
+
+    <!-- Recent Chats List -->
+    <div
+      class="recent-chats space-y-2 overflow-y-auto mt-4"
+      style="height: calc(100vh - 200px)"
+    >
+      <h3 class="text-sm font-semibold text-gray-400">Recent Chats</h3>
+      <ul id="recentChatsList" class="overflow-y-auto space-y-2">
+        {% for chat in recent_chats %}
+        <li
+          class="chat-item bg-gray-700 p-2 rounded-md hover:bg-blue-500 cursor-pointer"
+          onclick="loadChat('{{ chat.recent_id }}')"
+        >
+          {{ chat.title }}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Main Chat Area (Right) -->
+  <div class="w-3/4 bg-gray-900 p-4 flex flex-col h-full">
+    <!-- Chat Header -->
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center">
+        <div class="text-xl font-semibold text-blue-400">AI Assistant</div>
+        <div class="ml-2 text-sm text-gray-500">Online</div>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div
+      id="conversationBox"
+      class="w-full flex-grow space-y-4 overflow-y-auto bg-gray-800 p-4 rounded-lg"
+    >
+      <!-- Received Message -->
+      <div class="flex items-start">
+        <div class="ml-3 bg-gray-700 p-3 rounded-lg">
+          <p class="text-sm text-gray-200">Hello! How can I help you today?</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input -->
+    <div class="message-typing-box mt-4 flex items-center space-x-4">
+      <textarea
+        id="messageInput"
+        type="text"
+        placeholder="Type your message..."
+        class="flex-1 py-2 px-3 rounded-full bg-gray-700 text-gray-200 focus:outline-none"
+      ></textarea>
+      <button
+        onclick="sendMessage()"
+        class="bg-blue-500 text-white px-4 py-2 rounded-full ml-3 hover:bg-blue-600"
+      >
+        Send
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}
