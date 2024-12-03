@@ -32,21 +32,15 @@ async function sendMessage() {
       "user-message",
       "bg-blue-500",
       "text-white-800",
-      "p-2",
+      "p-3",
       "rounded-md",
       "mb-2",
-      "break-word",
+      "max-w-xl",
       "break-all"
     );
     userMessageDiv.textContent = message; // Add the user's message
     let userParentDiv = document.createElement("div");
-    userParentDiv.classList.add(
-      "flex",
-      "flex-col",
-      "items-end",
-      "relative",
-      "justify-end"
-    );
+    userParentDiv.classList.add("flex", "items-end", "relative", "justify-end");
     userParentDiv.appendChild(userMessageDiv);
     conversationBox.appendChild(userParentDiv);
 
@@ -64,11 +58,11 @@ async function sendMessage() {
         "message",
         "ai-message",
         "bg-gray-700",
-        "text-white-800",
-        "p-2",
+        "text-white",
+        "p-3",
         "rounded-md",
         "mb-2",
-        "break-word",
+        "max-w-xl",
         "break-all"
       );
 
@@ -146,10 +140,10 @@ async function loadChat(recentId) {
         chat.sender === "user" ? "user-message" : "ai-message",
         chat.sender === "user" ? "bg-blue-500" : "bg-gray-700",
         chat.sender === "user" ? "text-white-300" : "text-white-800",
-        "p-2",
+        "p-3",
         "rounded-md",
         "mb-2",
-        "break-word",
+        "max-w-xl",
         "break-all"
       );
 

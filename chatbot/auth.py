@@ -33,6 +33,10 @@ def login():
             flash("Login failed! Please Signup first", category='error')
             logout_user()  # Ensure user is logged out if they are not authenticated
             return jsonify({'success': False, 'message': 'Invalid email or password'}), 401
+        elif not user.password_hash:
+            flash("Login failed! Please use google Login", category='error')
+            logout_user()  # Ensure user is logged out if they are not authenticated
+            return jsonify({'success': False, 'error': 'Password is required'}), 400
         elif not user or not check_password_hash(user.password_hash, password):
             flash("Login failed! Please try again", category='error')
             logout_user()  # Ensure user is logged out if they are not authenticated
@@ -74,6 +78,10 @@ def signup():
                 return jsonify({'success': False, 'message': 'Email already registered'}), 400
 
             # Validate and hash the password
+            allowed_domains = ["@gmail.com", "@outlook.com", "@yahoo.com", "@hotmail.com"]
+            if not any(email.endswith(domain) for domain in allowed_domains):
+                flash("Invalid email domain. Please use a Gmail, Outlook, Yahoo, or Hotmail account", category='error')
+                return jsonify({'success': False, 'error': 'Invalid email domain'}), 400
             user = User(email=email, password_hash=generate_password_hash(password), name=name)
             db.session.add(user)
             db.session.commit()
