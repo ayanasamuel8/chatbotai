@@ -7,6 +7,8 @@ from authlib.integrations.flask_client import OAuth
 from flask_socketio import SocketIO, emit
 from dotenv import load_dotenv
 import os
+from flask_sse import sse
+
 
 # Initialize the database and migrate
 db = SQLAlchemy()
@@ -24,6 +26,7 @@ def create_app():
     app.config['SECRET_KEY'] =os.getenv('SECRET_KEY')   # Replace with a strong secret key
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Optional but recommended
+    app.config["REDIS_URL"] = "redis://localhost:6379/0" # Redis is required for SSE app.register_blueprint(sse, url_prefix='/stream'
 
     # Initialize the extensions with the app
     db.init_app(app)
@@ -39,6 +42,7 @@ def create_app():
         server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
         client_kwargs={'scope': 'openid email profile'}
     )
+    app.register_blueprint(sse, url_prefix='/stream')
 
     # Import and register Blueprints
     from .views import views

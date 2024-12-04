@@ -14,6 +14,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+function streamer(aiMessageDiv, aiMessage, conversationBox) {
+  let length = 0;
+  const interval = setInterval(() => {
+    aiMessageDiv.textContent += aiMessage[length++];
+    if (length >= aiMessage.length) {
+      clearInterval(interval);
+
+      // After the typing effect is complete, parse and highlight the content
+      let aiResponse = marked.parse(aiMessageDiv.textContent); // Markdown parsing
+      let languageMatch = aiResponse.match(/```(\w+)/); // Regex to detect language
+      if (languageMatch) {
+        let language = languageMatch[1]; // Extract language (e.g., 'javascript')
+        aiResponse = aiResponse.replace(
+          /```(\w+)([\s\S]*?)```/g,
+          `<pre><code class="language-$1">$2</code></pre>`
+        );
+      }
+
+      aiMessageDiv.innerHTML = aiResponse; // Inject parsed response with markdown
+      Prism.highlightAll(); // Apply syntax highlighting after the content is fully typed
+    }
+    conversationBox.scrollTop = conversationBox.scrollHeight;
+  }, 0.001);
+}
+
 // Function to send a message
 // Function to send a message
 async function sendMessage() {
@@ -43,6 +68,7 @@ async function sendMessage() {
     userParentDiv.classList.add("flex", "items-end", "relative", "justify-end");
     userParentDiv.appendChild(userMessageDiv);
     conversationBox.appendChild(userParentDiv);
+    conversationBox.scrollTop = conversationBox.scrollHeight;
 
     // Send to backend
     const response = await fetch("/chat", {
@@ -53,6 +79,8 @@ async function sendMessage() {
 
     const data = await response.json();
     if (data.response) {
+      let aiParentDiv = document.createElement("div");
+      aiParentDiv.classList.add("flex", "items-start", "relative");
       let aiMessageDiv = document.createElement("div");
       aiMessageDiv.classList.add(
         "message",
@@ -66,24 +94,10 @@ async function sendMessage() {
         "break-all"
       );
 
-      // Detect language and wrap code blocks
-      let aiResponse = marked.parse(data.response); // Markdown parsing
-      let languageMatch = aiResponse.match(/```(\w+)/); // Regex to detect language
-      if (languageMatch) {
-        let language = languageMatch[1]; // Extract language (e.g., 'javascript')
-        aiResponse = aiResponse.replace(
-          /```(\w+)([\s\S]*?)```/g,
-          `<pre><code class="language-$1">$2</code></pre>`
-        );
-      }
-
-      aiMessageDiv.innerHTML = aiResponse; // Inject parsed response
-      let aiParentDiv = document.createElement("div");
-      aiParentDiv.classList.add("flex", "items-start", "relative");
       aiParentDiv.appendChild(aiMessageDiv);
       conversationBox.appendChild(aiParentDiv);
       conversationBox.scrollTop = conversationBox.scrollHeight;
-
+      streamer(aiMessageDiv, data.response, conversationBox);
       // Re-run Prism.js for syntax highlighting
       Prism.highlightAll();
 
@@ -316,28 +330,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
-/*
-function toggleRecentChats() {
-  const sidebar = document.getElementById("recentChatsSidebar");
-  if (sidebar.style.width === "0px" || sidebar.classList.contains("hidden")) {
-    sidebar.style.width = "16rem";
-    sidebar.classList.remove("hidden");
-  } else {
-    sidebar.style.width = "0";
-    setTimeout(() => sidebar.classList.add("hidden"), 300);
-  }
-}
-
-// Ensure recent chats are scrollable
-window.addEventListener("resize", () => {
-  const sidebar = document.getElementById("recentChatsSidebar");
-  if (window.innerWidth < 768) {
-    sidebar.style.width = "0";
-    sidebar.classList.add("hidden");
-  } else {
-    sidebar.style.width = "16rem";
-    sidebar.classList.remove("hidden");
-  }
-});
-*/
