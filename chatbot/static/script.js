@@ -90,7 +90,7 @@ async function sendMessage() {
       // Update the chat title if it's the first user query
       const recentChatsList = document.querySelector(".recent-chats ul");
       const newChatItem = recentChatsList.querySelector(
-        `li.chat-item:last-child`
+        `li.chat-item:first-child`
       );
 
       if (newChatItem && !newChatItem.dataset.titleSet) {
@@ -267,7 +267,7 @@ function startNewChat(recent_id) {
   newChatItem.onclick = function () {
     loadChat(recent_id); // Attach an event handler to load the chat
   };
-  recentChatsList.appendChild(newChatItem);
+  recentChatsList.insertBefore(newChatItem, recentChatsList.firstChild);
 }
 
 // Login function
