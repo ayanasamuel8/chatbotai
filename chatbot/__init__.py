@@ -4,7 +4,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from authlib.integrations.flask_client import OAuth
-from flask_socketio import SocketIO, emit
 from dotenv import load_dotenv
 import os
 from flask_sse import sse
@@ -18,7 +17,6 @@ DB_NAME = 'database.db'
 
 # Initialize OAuth for authentication
 oauth = OAuth()
-socketio = SocketIO()
 
 def create_app():
     """
@@ -36,7 +34,6 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     oauth.init_app(app)  # Initialize OAuth for Google authentication
-    socketio.init_app(app)  # Initialize SocketIO for real-time communication
 
     # Register Google OAuth client
     oauth.register(
