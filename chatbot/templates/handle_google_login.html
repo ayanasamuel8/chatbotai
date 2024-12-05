@@ -1,7 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Google Login Success</title>
+    <style>
+      body {
+        background-color: #1f2937; /* Dark background */
+        color: #fff;
+        font-family: "Arial", sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .loading-container {
+        text-align: center;
+        background-color: #2d3748; /* Darker box */
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+
+      .spinner {
+        margin: 0 auto;
+        width: 3rem;
+        height: 3rem;
+        border: 4px solid #e2e8f0;
+        border-top-color: #4c51bf;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      .loading-text {
+        margin-top: 1rem;
+        font-size: 1.2rem;
+        color: #e2e8f0;
+      }
+
+      /* Pulse animation for loading */
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .pulse-bar {
+        width: 100%;
+        height: 1.5rem;
+        background-color: #4a5568;
+        margin: 0.5rem 0;
+        border-radius: 8px;
+        animation: pulse 1.5s infinite ease-in-out;
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.3;
+        }
+
+        50% {
+          opacity: 0.7;
+        }
+
+        100% {
+          opacity: 0.3;
+        }
+      }
+    </style>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const recentId = "{{ recent_id }}";
@@ -15,7 +88,17 @@
       });
     </script>
   </head>
+
   <body>
-    <h1>Handling Google Login...</h1>
+    <div class="loading-container">
+      <!-- Loading Spinner -->
+      <div class="spinner"></div>
+      <!-- Loading Text -->
+      <div class="loading-text">Processing...</div>
+      <!-- Placeholder Pulse Bars -->
+      <div class="pulse-bar"></div>
+      <div class="pulse-bar"></div>
+      <div class="pulse-bar" style="width: 80%"></div>
+    </div>
   </body>
 </html>

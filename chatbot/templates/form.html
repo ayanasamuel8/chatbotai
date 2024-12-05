@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block title %} Chatbot Form {% endblock %} {% block
 navbar_logout %}
-<!-- Add the logout button here -->
+<!-- Logout button placed in the navbar section -->
 <a class="text-gray-300 hover:text-white" href="{{ url_for('auth.logout') }}"
   >Logout</a
 >
@@ -8,12 +8,12 @@ navbar_logout %}
 <div class="flex h-screen">
   <!-- Sidebar (Left) -->
   <div class="w-1/4 bg-gray-800 text-gray-100 p-4 space-y-4 h-full">
-    <!-- Logo -->
+    <!-- Logo Section -->
     <div class="text-center mb-6">
       <h1 class="text-xl font-semibold text-blue-500">Chatbot</h1>
     </div>
 
-    <!-- Search Bar -->
+    <!-- Search Bar for searching through chats -->
     <div>
       <input
         id="searchInput"
@@ -23,7 +23,7 @@ navbar_logout %}
       />
     </div>
 
-    <!-- New Chat Button -->
+    <!-- Button to create a new chat -->
     <div>
       <button
         class="w-full bg-blue-500 py-2 rounded-md text-gray-100 font-bold hover:bg-blue-600"
@@ -42,10 +42,26 @@ navbar_logout %}
       <ul id="recentChatsList" class="overflow-y-auto space-y-2">
         {% for chat in recent_chats | reverse %}
         <li
-          class="chat-item bg-gray-700 p-2 rounded-md hover:bg-blue-500 cursor-pointer"
-          onclick="loadChat('{{ chat.recent_id }}')"
+          class="chat-item bg-gray-700 p-2 rounded-md flex items-center justify-between"
+          data-id="{{ chat.recent_id }}"
         >
-          {{ chat.title }}
+          <!-- Button to load chat -->
+          <button
+            type="button"
+            class="load-chat flex-1 text-left bg-transparent text-white font-medium hover:underline"
+            onclick="loadChat('{{ chat.recent_id }}')"
+          >
+            {{ chat.title }}
+          </button>
+          <!-- Button to delete chat -->
+          <button
+            type="button"
+            class="delete-chat bg-red-600 hover:bg-red-800 text-white p-2 rounded-full ml-2"
+            aria-label="Close"
+            onclick="deleteChat(event,'{{ chat.recent_id }}', this)"
+          >
+            &times;
+          </button>
         </li>
         {% endfor %}
       </ul>
@@ -62,26 +78,25 @@ navbar_logout %}
       </div>
     </div>
 
-    <!-- Chat Messages -->
-    <!-- Chat Messages -->
+    <!-- Chat Messages Display -->
     <div
       id="conversationBox"
       class="w-full flex-grow space-y-4 overflow-y-auto bg-gray-800 p-4 rounded-lg"
     >
-      <!-- Received Message -->
+      <!-- Received message displayed here (example message) -->
       <div class="flex items-start">
         <div class="ml-3 bg-gray-700 p-3 rounded-lg">
           <p class="text-sm text-gray-200">Hello! How can I help you today?</p>
         </div>
       </div>
 
-      <!-- Loading Spinner -->
+      <!-- Loading Spinner (visible while waiting for response) -->
       <div id="loadingSpinner" class="flex justify-center mt-4">
         <div class="loader"></div>
       </div>
     </div>
 
-    <!-- Chat Input -->
+    <!-- Message Input Box -->
     <div class="message-typing-box mt-4 flex items-center space-x-4">
       <textarea
         id="messageInput"

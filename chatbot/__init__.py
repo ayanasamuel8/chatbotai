@@ -9,32 +9,36 @@ from dotenv import load_dotenv
 import os
 from flask_sse import sse
 
-
-# Initialize the database and migrate
+# Initialize the database, migration, and other extensions
 db = SQLAlchemy()
 migrate = Migrate()
 load_dotenv()
 
 DB_NAME = 'database.db'
 
-# Initialize OAuth
+# Initialize OAuth for authentication
 oauth = OAuth()
-socketio=SocketIO()
+socketio = SocketIO()
 
 def create_app():
+    """
+    Create and configure the Flask app with all necessary extensions.
+    """
     app = Flask(__name__)
-    app.config['SECRET_KEY'] =os.getenv('SECRET_KEY')   # Replace with a strong secret key
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Optional but recommended
-    app.config["REDIS_URL"] = "redis://localhost:6379/0" # Redis is required for SSE app.register_blueprint(sse, url_prefix='/stream'
 
-    # Initialize the extensions with the app
+    # Set configuration variables from environment variables
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')  # Secret key for session management
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'  # URI for the SQLite database
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # Disable modification tracking (optional)
+    app.config["REDIS_URL"] = "redis://localhost:6379/0"  # Redis URL for Server-Sent Events (SSE)
+    
+    # Initialize extensions with the Flask app
     db.init_app(app)
     migrate.init_app(app, db)
-    oauth.init_app(app)  # Initialize OAuth
-    socketio.init_app(app)  # Initialize SocketIO
+    oauth.init_app(app)  # Initialize OAuth for Google authentication
+    socketio.init_app(app)  # Initialize SocketIO for real-time communication
 
-    # Google OAuth configuration within create_app
+    # Register Google OAuth client
     oauth.register(
         name='google',
         client_id=os.getenv('CLIENT_ID'),
@@ -42,23 +46,25 @@ def create_app():
         server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
         client_kwargs={'scope': 'openid email profile'}
     )
+
+    # Register Server-Sent Events (SSE) blueprint
     app.register_blueprint(sse, url_prefix='/stream')
 
-    # Import and register Blueprints
+    # Import and register Blueprints for views and authentication
     from .views import views
     from .auth import auth
-
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
 
-    # Create the database if it doesn't exist (Only if necessary, use Flask-Migrate for migrations)
+    # Create the database if it doesn't exist
     create_database(app)
 
+    # Set up the login manager
     login_manager = LoginManager()
-    login_manager.login_view = 'auth.login'
+    login_manager.login_view = 'auth.login'  # Redirect to login if not authenticated
     login_manager.init_app(app)
-    
-    # Use a function to load the user to prevent circular imports
+
+    # Load user function to prevent circular imports
     @login_manager.user_loader
     def load_user(user_id):
         from .models import User  # Import inside function to avoid circular import
@@ -67,7 +73,9 @@ def create_app():
     return app
 
 def create_database(app):
-    # Check if the database exists before creating it (only for initial setup)
+    """
+    Create the database if it doesn't exist yet. This is a one-time setup.
+    """
     if not path.exists('chatbot/' + DB_NAME):
         with app.app_context():
-            db.create_all()  # Create tables if they don't exist yet
+            db.create_all()  # Create tables for all models if they don't exist yet

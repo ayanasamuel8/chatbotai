@@ -1,5 +1,6 @@
 /**
  * Handles the signup process.
+ * Validates the user's input, sends the data to the backend, and handles the response.
  */
 function signup() {
   let email = document.getElementById("email").value;
@@ -7,7 +8,7 @@ function signup() {
   let name = document.getElementById("name").value;
   let confirmPassword = document.getElementById("confirm_password").value;
 
-  // Validate password match
+  // Validate that the password and confirm password match
   if (password !== confirmPassword) {
     alert("Passwords do not match!");
     return;
@@ -26,12 +27,15 @@ function signup() {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        window.location.href = "/login"; // Redirect to login page
+        // If signup is successful, redirect to the login page
+        window.location.href = "/login";
       } else {
-        window.location.href = "/signup"; // Redirect to
+        // If there's an error, redirect back to the signup page
+        window.location.href = "/signup";
       }
     })
     .catch((error) => {
+      // Handle any network or unexpected errors
       console.error("Error:", error);
       alert("An error occurred during signup.");
     });
